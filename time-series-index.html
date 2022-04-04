@@ -87,6 +87,7 @@ d3.tsv("data.tsv", function(d) {
 	    .data(cities)
 	    .enter().append("svg")
 	      .attr("class", "city")
+		  .attr("id",d=>d.id.substring(0,3).toUpperCase())
 		  .attr("width", width - margin.right);
 
 
@@ -97,6 +98,7 @@ d3.tsv("data.tsv", function(d) {
 	   
 	   if(path.attr("visibility")!="hidden"){
 		svg.selectAll("path").style("stroke","LightGray")
+		d3.select('#'+id).raise().classed("active", true);
 		path.style("stroke",(d)=>{return z(d.id)}).raise().classed("active", true);
 	   }
 
@@ -110,6 +112,7 @@ d3.tsv("data.tsv", function(d) {
 	  	return;
 	     }
 	     city.selectAll('.line').style('stroke', d => {
+
 	  	return z(d.id)
 	     });
 	  }
@@ -132,8 +135,7 @@ d3.tsv("data.tsv", function(d) {
 	  function zoomed(event) {
 		var xz = event.transform.rescaleX(x);
 		x_axis.call(d3.axisBottom(xz))
-		city.selectAll(".path").attr("d",function(d,data){
-				return xz(d.values)})
+		city.attr("d",line.x(function(d){ console.log(xz(d.date)); return xz(d.date);}));
 	  }
 
 	  const zoom = d3.zoom()
